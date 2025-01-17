@@ -8,46 +8,13 @@
   <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: blob:">
   <title>PacMan</title>
   <style>
-  
-      body {
+    body {
       color: #ffffff;
       font-family: sans-serif;
+      overflow: hidden;
       margin: 0;
       padding: 0;
-      background-color: #000;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 100vh;
     }
-    #app {
-      flex-grow: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #controls {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      padding: 1rem;
-      background-color: #222;
-      border-top: 1px solid #444;
-    }
-    button {
-      background: #4cbf56;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background: #3a9945;
-    }
- 
     :root, body.is-fullscreen {
       background-color: #000000;
     }
@@ -455,39 +422,25 @@
     run().catch(handleError);
   </script>
   
- 
-<!-- Contrôles en bas de la page -->
-  <div id="controls">
-    <button id="startButton">Démarrer</button>
-    <button id="pauseButton">Pause</button>
-    <button id="stopButton">Arrêter</button>
-  </div>
+  <!-- Barre de contrôle tactile -->
+<div id="controls" style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #000; display: flex; justify-content: center; padding: 10px; gap: 10px;">
+    <button class="control-button" onclick="sendCommand('ArrowUp')" style="width: 50px; height: 50px;">&#8593;</button>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button class="control-button" onclick="sendCommand('ArrowLeft')" style="width: 50px; height: 50px;">&#8592;</button>
+        <button class="control-button" onclick="sendCommand('ArrowDown')" style="width: 50px; height: 50px;">&#8595;</button>
+    </div>
+    <button class="control-button" onclick="sendCommand('ArrowRight')" style="width: 50px; height: 50px;">&#8594;</button>
+</div>
 
-  <script src="script.js"></script>
-  <script>
-    const startButton = document.getElementById('startButton');
-    const pauseButton = document.getElementById('pauseButton');
-    const stopButton = document.getElementById('stopButton');
-    
-    let isPaused = false;
+<script>
+    // Fonction pour envoyer des commandes au jeu
+    function sendCommand(key) {
+        const iframe = document.getElementById('app'); // ID du conteneur du jeu
+        if (iframe && iframe.contentWindow) {
+            iframe.contentWindow.postMessage({ type: 'keydown', key: key }, '*');
+        }
+    }
+</script>
 
-    startButton.addEventListener('click', () => {
-      // Démarrer le jeu
-      scaffolding.greenFlag();
-    });
-
-    pauseButton.addEventListener('click', () => {
-      // Pause ou reprise du jeu
-      isPaused = !isPaused;
-      vm.setPaused(isPaused);
-    });
-
-    stopButton.addEventListener('click', () => {
-      // Arrêter le jeu
-      scaffolding.stopAll();
-    });
-  </script>
-
- 
 </body>
 </html>
